@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pipeline sequence</title>
+<style>body{margin:0;padding:16px;font-family:'Segoe UI',Arial,sans-serif;background:#fff;}svg{width:100%;height:auto;display:block;margin:0 auto;}</style>
+</head>
+<body>
+<svg viewBox="0 0 1000 480" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arr" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L8,3 L0,6 Z" fill="#1d4ed8"/></marker>
+    <marker id="arrG" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L8,3 L0,6 Z" fill="#16a34a"/></marker>
+    <marker id="arrR" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth"><path d="M0,0 L8,3 L0,6 Z" fill="#dc2626"/></marker>
+  </defs>
+
+  <g font-size="12.5" font-weight="700">
+    <rect x="40" y="20" width="110" height="32" rx="8" fill="#fff7e6" stroke="#d97706"/><text x="95" y="41" text-anchor="middle" fill="#92400e">Client</text>
+    <rect x="200" y="20" width="110" height="32" rx="8" fill="#eff6ff" stroke="#2563eb"/><text x="255" y="41" text-anchor="middle" fill="#1d4ed8">Pipeline</text>
+    <rect x="360" y="20" width="100" height="32" rx="8" fill="#f0fdf4" stroke="#16a34a"/><text x="410" y="41" text-anchor="middle" fill="#15803d">filters</text>
+  </g>
+  <g stroke="#cbd5e1" stroke-dasharray="4 4">
+    <line x1="95" y1="52" x2="95" y2="450"/>
+    <line x1="255" y1="52" x2="255" y2="450"/>
+    <line x1="410" y1="52" x2="410" y2="450"/>
+  </g>
+
+  <text x="40" y="80" font-size="12.5" font-weight="700" fill="#0f172a">A. Happy path</text>
+  <line x1="95" y1="100" x2="250" y2="100" stroke="#1d4ed8" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="172" y="94" text-anchor="middle" font-size="11.5" fill="#1e40af">upload file</text>
+
+  <line x1="255" y1="125" x2="405" y2="125" stroke="#16a34a" stroke-width="1.4" marker-end="url(#arrG)"/>
+  <text x="330" y="119" text-anchor="middle" font-size="11" fill="#15803d">validate(ctx)</text>
+  <line x1="255" y1="150" x2="405" y2="150" stroke="#16a34a" stroke-width="1.4" marker-end="url(#arrG)"/>
+  <text x="330" y="144" text-anchor="middle" font-size="11" fill="#15803d">virus_scan(ctx)</text>
+  <line x1="255" y1="175" x2="405" y2="175" stroke="#16a34a" stroke-width="1.4" marker-end="url(#arrG)"/>
+  <text x="330" y="169" text-anchor="middle" font-size="11" fill="#15803d">thumbnail(ctx)</text>
+  <line x1="255" y1="200" x2="405" y2="200" stroke="#16a34a" stroke-width="1.4" marker-end="url(#arrG)"/>
+  <text x="330" y="194" text-anchor="middle" font-size="11" fill="#15803d">persist(ctx)</text>
+  <line x1="255" y1="225" x2="405" y2="225" stroke="#16a34a" stroke-width="1.4" marker-end="url(#arrG)"/>
+  <text x="330" y="219" text-anchor="middle" font-size="11" fill="#15803d">notify(ctx)</text>
+
+  <line x1="255" y1="255" x2="100" y2="255" stroke="#1d4ed8" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="178" y="249" text-anchor="middle" font-size="11.5" fill="#1e40af">200 done</text>
+
+  <text x="40" y="295" font-size="12.5" font-weight="700" fill="#0f172a">B. Early stop (virus detected)</text>
+  <line x1="255" y1="318" x2="405" y2="318" stroke="#16a34a" stroke-width="1.4" marker-end="url(#arrG)"/>
+  <text x="330" y="312" text-anchor="middle" font-size="11" fill="#15803d">validate → ok</text>
+  <line x1="405" y1="343" x2="255" y2="343" stroke="#dc2626" stroke-width="1.4" marker-end="url(#arrR)"/>
+  <text x="330" y="357" text-anchor="middle" font-size="11" fill="#b91c1c">virus_scan raises StopPipeline</text>
+  <line x1="255" y1="375" x2="100" y2="375" stroke="#dc2626" stroke-width="1.5" marker-end="url(#arrR)"/>
+  <text x="178" y="369" text-anchor="middle" font-size="11.5" fill="#b91c1c">400 rejected (downstream skipped)</text>
+
+  <text x="500" y="430" text-anchor="middle" font-size="11.5" fill="#64748b">Context flows through each filter; one abort stops the chain. Unix-pipe style.</text>
+</svg>
+</body>
+</html>
